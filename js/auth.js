@@ -6,14 +6,6 @@
 
 $(document).ready(function () {
 
-    // Auto-fill admin credentials if user clicks the hint button
-    $('#btnFillAdmin').on('click', function () {
-        $('#loginEmail').val('admin@svdtravels.com');
-        $('#loginPassword').val('admin123');
-        $('#emailError').hide();
-        $('#passwordError').hide();
-        $('#loginEmail, #loginPassword').removeClass('is-invalid');
-    });
 
     // ==========================================
     // 1. LOGIN FORM VALIDATION (login.html)
