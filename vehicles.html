@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicles | WheelWise — Vehicle Booking</title>
+    <title>Vehicles | SVD Travels — Vehicle Booking</title>
 
     <!-- Bootstrap 5 CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@
                         <circle cx="16.6" cy="17.4" r="1.05" stroke="#fff" stroke-width="1.4"/>
                     </svg>
                 </span>
-                Wheel<span class="text-accent">Wise</span>
+                SVD <span class="text-accent">Travels</span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -94,12 +94,12 @@
                 </div>
 
                 <div class="col-6 col-md-3 col-lg-2">
-                    <label class="form-label" for="filterMinPrice">Min Price ($)</label>
+                    <label class="form-label" for="filterMinPrice">Min Price (₹)</label>
                     <input type="number" class="form-control" id="filterMinPrice" min="0" placeholder="Min">
                 </div>
 
                 <div class="col-6 col-md-3 col-lg-2">
-                    <label class="form-label" for="filterMaxPrice">Max Price ($)</label>
+                    <label class="form-label" for="filterMaxPrice">Max Price (₹)</label>
                     <input type="number" class="form-control" id="filterMaxPrice" min="0" placeholder="Max">
                 </div>
 
@@ -153,7 +153,7 @@
          ============================================= -->
     <footer class="home-footer mt-2">
         <div class="container py-4 d-flex flex-wrap gap-2 justify-content-between align-items-center">
-            <span>&copy; 2026 WheelWise &middot; Vehicle Booking &middot; Full Stack Course Project</span>
+            <span>&copy; 2026 SVD Travels &middot; Vehicle Booking &middot; Full Stack Course Project</span>
             <span class="footer-links">HTML &middot; CSS &middot; Bootstrap &middot; jQuery &middot; JSON</span>
         </div>
     </footer>
@@ -162,6 +162,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap JS bundle (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Vehicle dataset (local fallback for direct file:// open) -->
+    <script src="js/vehicles-data.js"></script>
     <!-- Vehicles page logic -->
     <script src="js/vehicles.js"></script>
 

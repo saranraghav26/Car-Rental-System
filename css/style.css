@@ -1,5 +1,5 @@
 /* =============================================
-   WheelWise — Global Stylesheet
+   SVD Travels — Global Stylesheet
    Stack: HTML / CSS / Bootstrap 5
    Design: clean, modern, vehicle-themed
    ============================================= */
@@ -110,25 +110,37 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 30px;
     background: linear-gradient(135deg, rgba(59, 140, 255, 0.95), rgba(34, 211, 238, 0.9));
     box-shadow: 0 18px 40px rgba(59, 140, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    animation: splashFadeUp .7s ease both;
 }
 .splash-logo svg { width: 52px; height: 52px; }
 
 /* App name + tagline */
 .app-name {
-    font-size: clamp(2.5rem, 7vw, 4rem);
-    font-weight: 800;
+    font-size: clamp(2.6rem, 7.5vw, 4.2rem);
+    font-weight: 900;
     letter-spacing: -0.02em;
-    margin: 1.1rem 0 0.2rem;
-    animation: splashFadeUp .7s ease .12s both;
+    margin: 1.2rem 0 0.3rem;
+    display: inline-block;
 }
-.app-name .text-accent { color: var(--accent-2); }
+.app-name .name-wheel {
+    background: linear-gradient(135deg, #ff3366 0%, #ff5e36 45%, #ffaa00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 14px rgba(255, 51, 102, 0.45));
+}
+.app-name .name-wise,
+.app-name .text-accent {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #9b51e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 14px rgba(0, 242, 254, 0.45));
+}
 
 .app-tagline {
     font-size: clamp(.95rem, 2.6vw, 1.15rem);
     color: var(--text-muted);
     letter-spacing: .02em;
-    animation: splashFadeUp .7s ease .22s both;
 }
 
 /* Loading progress bar */
@@ -140,7 +152,6 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.12);
     overflow: hidden;
-    animation: splashFadeUp .7s ease .32s both;
 }
 .splash-loader .progress-bar {
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -150,7 +161,6 @@ h1, h2, h3, h4, h5, h6 {
 .splash-status {
     font-size: .85rem;
     color: var(--text-muted);
-    animation: splashFadeUp .7s ease .42s both;
 }
 
 /* Continue button */
@@ -164,7 +174,6 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: .02em;
     box-shadow: 0 12px 28px rgba(59, 140, 255, 0.4);
     transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-    animation: splashFadeUp .7s ease .52s both;
 }
 .btn-continue:hover,
 .btn-continue:focus {
@@ -173,12 +182,6 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 16px 34px rgba(59, 140, 255, 0.5);
     filter: brightness(1.04);
     text-decoration: none;
-}
-
-/* Entrance keyframe */
-@keyframes splashFadeUp {
-    from { opacity: 0; transform: translateY(26px); }
-    to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ─────────────────────────────────────────────

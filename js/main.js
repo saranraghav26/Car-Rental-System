@@ -1,212 +1,146 @@
-/* =============================================
-   main.js — App-wide logic
-   Stack: JavaScript / jQuery
-   ============================================= */
+/* ==========================================================
+   main.js — Simple Main Script for Beginners
+   Handles:
+   1. Splash screen continue click (index.html)
+   2. Home page vehicle loading & search (home.html)
+   3. Navigation to Vehicle Details & Logout
+   ========================================================== */
 
-$(function () {
-    /* =========================================
-       SPLASH SCREEN  (frontend/index.html)
-       Auto-navigates to login.html after a
-       short delay, or on "Continue" click.
-       Only runs on the index splash page.
-       ========================================= */
+$(document).ready(function () {
 
-    // Only run splash logic on index.html
-    if (!$('#splashProgress').length) return;
-
-    var SPLASH_DELAY = 2600; // ms — how long the loader runs
-    var REDIRECT_URL  = 'login.html';
-
-    // Avoid double-navigation if the page is reloaded mid-redirect
-    if (window.location.pathname.endsWith(REDIRECT_URL)) {
-        return;
+    // ==========================================
+    // 1. SPLASH SCREEN (index.html)
+    // ==========================================
+    if ($('#splash').length) {
+        // When clicking 'Continue', go straight to login
+        $('#btnContinue').on('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+        });
     }
 
-    // Utility: show the Role Selection Modal (Customer vs Admin)
-    var showRoleModal = function () {
-        var modalEl = document.getElementById('roleModal');
-        if (modalEl && typeof bootstrap !== 'undefined') {
-            var modal = new bootstrap.Modal(modalEl);
-            modal.show();
-        } else {
-            window.location.href = REDIRECT_URL;
-        }
-    };
+    // ==========================================
+    // 2. HOME PAGE (home.html)
+    // ==========================================
+    if ($('#featuredRow').length) {
+        var allVehicles = [];
 
-    // 1. Animate the loading progress bar (0 → 100%)
-    $('#splashProgress')
-        .css('width', '0%')
-        .animate({ width: '100%' }, SPLASH_DELAY, 'linear', function () {
-            $('#splashStatus').text('System ready — select your portal…');
-        });
-
-    // 2. Rotate status messages during load
-    var statusSteps = ['Starting engine…', 'Checking vehicles…', 'Almost there…'];
-    $.each(statusSteps, function (i, message) {
-        setTimeout(function () {
-            $('#splashStatus').text(message);
-        }, (i + 1) * (SPLASH_DELAY / (statusSteps.length + 1)));
-    });
-
-    // 3. Open Role Modal after short delay
-    var autoTimer = setTimeout(function () {
-        showRoleModal();
-    }, SPLASH_DELAY + 400);
-
-    // 4. Manual "Continue" button — instant role modal open
-    $('#btnContinue').on('click', function () {
-        clearTimeout(autoTimer);
-        showRoleModal();
-    });
-});
-
-$(function () {
-
-    /* =========================================
-       HOME PAGE  (frontend/home.html)
-       Reads vehicles from local JSON:
-       json/vehicles.json
-       ========================================= */
-
-    var VEHICLES = [];
-
-    // ------------- Data: load vehicles from API or local JSON -------------
-    $.ajax({
-        url: '/api/vehicles',
-        method: 'GET',
-        dataType: 'json'
-    }).done(function (data) {
-        VEHICLES = (data && data.vehicles) || (Array.isArray(data) ? data : []);
-        if (VEHICLES.length) {
-            renderVehicles(VEHICLES);
-            var $stat = $('#heroVehicleCount');
-            if ($stat.length) { $stat.text(VEHICLES.length); }
-        } else {
-            fallbackMainLocalJson();
-        }
-    }).fail(function () {
-        fallbackMainLocalJson();
-    });
-
-    function fallbackMainLocalJson() {
-        $.ajax({
-            url: 'json/vehicles.json',
-            method: 'GET',
-            dataType: 'json'
-        }).done(function (data) {
-            VEHICLES = (data && data.vehicles) || (Array.isArray(data) ? data : []);
-            renderVehicles(VEHICLES);
-
-            var $stat = $('#heroVehicleCount');
-            if ($stat.length) {
-                $stat.text(VEHICLES.length);
+        // 1. Load vehicles (works for both local file:// and web server)
+        function loadHomeVehicles() {
+            if (window.VEHICLES_DATA && window.VEHICLES_DATA.length > 0) {
+                allVehicles = window.VEHICLES_DATA;
+                displayVehicles(allVehicles);
+                $('#heroVehicleCount').text(allVehicles.length);
+                return;
             }
-        }).fail(function () {
-            $('#featuredRow').html(
-                '<p class="col-12 text-center text-muted py-4">Could not load the vehicle catalogue.</p>'
-            );
+
+            $.ajax({
+                url: 'json/vehicles.json',
+                method: 'GET',
+                dataType: 'json'
+            }).done(function (data) {
+                allVehicles = (data && data.vehicles) ? data.vehicles : (Array.isArray(data) ? data : []);
+                displayVehicles(allVehicles);
+                $('#heroVehicleCount').text(allVehicles.length);
+            }).fail(function () {
+                if (window.VEHICLES_DATA && window.VEHICLES_DATA.length > 0) {
+                    allVehicles = window.VEHICLES_DATA;
+                    displayVehicles(allVehicles);
+                    $('#heroVehicleCount').text(allVehicles.length);
+                } else {
+                    $('#featuredRow').html('<p class="text-center text-muted py-4">Could not load vehicles.</p>');
+                }
+            });
+        }
+        loadHomeVehicles();
+
+        // 2. Function to display vehicle cards on the page
+        function displayVehicles(list) {
+            var $row = $('#featuredRow');
+            $row.empty(); // Clear old cards
+
+            // Loop through each vehicle and create HTML card
+            for (var i = 0; i < list.length; i++) {
+                var car = list[i];
+                var imgSrc = car.image || 'images/vehicles/camry.jpg';
+                var cardHtml = 
+                    '<div class="col-12 col-sm-6 col-lg-4 col-xl-3">' +
+                        '<article class="vehicle-card h-100" data-id="' + car.vehicleId + '" style="cursor: pointer;">' +
+                            '<div class="vehicle-tile-wrap">' +
+                                '<img src="' + imgSrc + '" alt="' + car.name + '" class="vehicle-tile-img" onerror="this.src=\'images/vehicles/camry.jpg\'">' +
+                            '</div>' +
+                            '<div class="p-3">' +
+                                '<div class="d-flex justify-content-between align-items-start gap-2 mb-2">' +
+                                    '<h5 class="vehicle-name mb-0">' + car.name + '</h5>' +
+                                    '<span class="type-badge">' + car.type + '</span>' +
+                                '</div>' +
+                                '<div class="vehicle-meta">' +
+                                    car.seats + ' Seats &middot; ' + car.transmission + ' &middot; ' + car.location +
+                                '</div>' +
+                                '<div class="d-flex justify-content-between align-items-center mt-3">' +
+                                    '<p class="vehicle-price">₹' + car.pricePerDay + '<small>/day</small></p>' +
+                                    '<button type="button" class="btn btn-view" data-id="' + car.vehicleId + '">View Details</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</article>' +
+                    '</div>';
+                $row.append(cardHtml);
+            }
+
+            // Show count
+            $('#searchCount').text('Showing ' + list.length + ' vehicles.');
+            $('#featuredEmpty').toggleClass('d-none', list.length > 0);
+        }
+
+        // 3. Search & Filter form
+        $('#searchForm').on('submit', function (e) {
+            e.preventDefault();
+
+            var searchType = $('#searchType').val().toLowerCase();
+            var searchLocation = $('#searchLocation').val().toLowerCase();
+
+            var filtered = [];
+            for (var i = 0; i < allVehicles.length; i++) {
+                var car = allVehicles[i];
+                var matchesType = (searchType === '' || car.type.toLowerCase() === searchType);
+                var text = (car.name + ' ' + car.type + ' ' + car.location).toLowerCase();
+                var matchesLoc = (searchLocation === '' || text.indexOf(searchLocation) !== -1);
+
+                if (matchesType && matchesLoc) {
+                    filtered.push(car);
+                }
+            }
+
+            displayVehicles(filtered);
+            $('#heroVehicleCount').text(filtered.length);
+        });
+
+        // Clear search if user empties input
+        $('#searchType, #searchLocation').on('input change', function () {
+            if (!$('#searchType').val() && !$('#searchLocation').val()) {
+                displayVehicles(allVehicles);
+                $('#heroVehicleCount').text(allVehicles.length);
+            }
+        });
+
+        // 4. Clicking 'View Details' -> save vehicle ID and go to vehicle-details.html
+        $('#featuredRow').on('click', '.btn-view, .vehicle-card', function (e) {
+            var id = $(this).data('id') || $(this).find('.btn-view').data('id');
+            if (id) {
+                localStorage.setItem('ww_selected_vehicle', id);
+                window.location.href = 'vehicle-details.html?id=' + id;
+            }
         });
     }
 
-    // ------------- Rendering -------------
-    function vehicleCard(v) {
-        var imgSrc = v.image || 'images/vehicles/camry.jpg';
-        return '' +
-            '<div class="col-12 col-sm-6 col-lg-4 col-xl-3">' +
-                '<article class="vehicle-card h-100">' +
-                    '<div class="vehicle-tile-wrap">' +
-                        '<img src="' + imgSrc + '" alt="' + v.name + '" class="vehicle-tile-img" loading="lazy" onerror="this.src=\'images/vehicles/camry.jpg\'">' +
-                    '</div>' +
-                    '<div class="p-3">' +
-                        '<div class="d-flex justify-content-between align-items-start gap-2 mb-2">' +
-                            '<h5 class="vehicle-name mb-0">' + v.name + '</h5>' +
-                            '<span class="type-badge">' + v.type + '</span>' +
-                        '</div>' +
-                        '<div class="vehicle-meta">' +
-                            v.seats + ' Seats &middot; ' + v.transmission + ' &middot; ' + v.location +
-                        '</div>' +
-                        '<div class="d-flex justify-content-between align-items-center mt-3">' +
-                            '<p class="vehicle-price">$' + v.pricePerDay + '<small>/day</small></p>' +
-                            '<button type="button" class="btn btn-view" data-id="' + v.vehicleId + '">View Details</button>' +
-                        '</div>' +
-                    '</div>' +
-                '</article>' +
-            '</div>';
-    }
-
-    function renderVehicles(list) {
-        var $row = $('#featuredRow');
-        $row.empty();
-
-        $.each(list, function (i, v) {
-            $row.append(vehicleCard(v));
-        });
-
-        // Status line
-        if (list.length === VEHICLES.length) {
-            $('#searchCount').text('Showing all ' + list.length + ' vehicles.');
-        } else {
-            $('#searchCount').text('Showing ' + list.length + ' of ' + VEHICLES.length + ' vehicles.');
-        }
-
-        // Empty state
-        $('#featuredEmpty').toggleClass('d-none', list.length > 0);
-    }
-
-    // ------------- Search / filter -------------
-    $('#searchForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var type = $.trim($('#searchType').val());
-        var loc  = $.trim($('#searchLocation').val()).toLowerCase();
-
-        var filtered = VEHICLES.filter(function (v) {
-            var matchType = !type || v.type.toLowerCase() === type.toLowerCase();
-            var matchLoc  = !loc ||
-                (v.name + ' ' + v.type + ' ' + v.location).toLowerCase().indexOf(loc) !== -1;
-            return matchType && matchLoc;
-        });
-
-        renderVehicles(filtered);
-
-        // Update hero vehicle count
-        var $stat = $('#heroVehicleCount');
-        if ($stat.length) {
-            $stat.text(filtered.length);
-        }
-    });
-
-    // Reset filters (clear) on the location/type when empty submitted
-    $('#searchType, #searchLocation').on('input change', function () {
-        var type = $.trim($('#searchType').val());
-        var loc  = $.trim($('#searchLocation').val());
-        if (!type && !loc) {
-            renderVehicles(VEHICLES); // back to full list
-        }
-    });
-
-    // Fill sensible date defaults
-    function toDateInput(d) { return d.toISOString().split('T')[0]; }
-    var today = new Date();
-    $('#pickupDate').val(toDateInput(today));
-    var later = new Date();
-    later.setDate(today.getDate() + 2);
-    $('#returnDate').val(toDateInput(later));
-
-    // ------------- View Details → vehicle-details.html -------------
-    // Stores the vehicleId in ww_selected_vehicle, then the
-    // details page loads vehicle data from json/vehicles.json.
-    $('#featuredRow').on('click', '.btn-view', function () {
-        var id = $(this).data('id');
-        localStorage.setItem('ww_selected_vehicle', id);
-        window.location.href = 'vehicle-details.html';
-    });
-
-    // ------------- Logout (with confirmation) -------------
+    // ==========================================
+    // 3. LOGOUT BUTTON (Navbar)
+    // ==========================================
     $('#btnLogout').on('click', function () {
-        if (window.confirm('Are you sure you want to log out of WheelWise?')) {
+        if (confirm('Are you sure you want to log out?')) {
             localStorage.removeItem('ww_user');
             window.location.href = 'login.html';
         }
     });
+
 });

@@ -1,42 +1,48 @@
-# WheelWise — Vehicle Booking Website
+# SVD Travels — Online Vehicle Booking Website
 
-**R1: Frontend / Client-Side Validation**
+**Course Project: Frontend & Client-Side Form Validation Only (Indian Rupees - ₹)**
 
-A fully client-side vehicle booking web application built as a course project.
+A fully client-side vehicle booking web application built as an R1 course project.
 
-- **Frontend:** 10 responsive HTML pages (splash → login/register → home → browse → details → booking → confirmation → my bookings → profile)
-- **Data:** vehicle catalogue loaded from a local JSON file (`frontend/json/vehicles.json`)
-- **Auth & storage:** all user accounts, sessions, and bookings are handled entirely in the browser via `localStorage`
-- **Validation:** comprehensive client-side (R1) validation on every form — login, register, booking, profile, change-password, search/filter
-
-No backend, database, or server is required.
+- **Frontend:** 10 clean, responsive HTML pages (Welcome Splash → Login/Register → Home → Vehicles Catalogue → Vehicle Details → Booking & Checkout → Confirmation Receipt → My Bookings → User Profile).
+- **Data:** Vehicle catalogue loaded from a local JSON file (`json/vehicles.json`) priced in **Indian Rupees (₹)**.
+- **Auth & Storage:** All user accounts, sessions, and bookings are handled entirely in the browser via `localStorage`.
+- **Validation:** Clear, beginner-friendly client-side form validation on every form — login, registration, vehicle booking, profile update, and search/filters.
+- **Currency:** All pricing across the application is formatted in **Indian Rupees (₹)**.
+- **Serverless:** No backend, database, or Node server is required. Runs directly in any web browser.
 
 ---
 
 ## 1. Project Purpose
 
-WheelWise lets a visitor create an account, browse a vehicle catalogue, search/filter/sort vehicles, book a car for a date range, receive an on-screen confirmation (with print), manage and cancel their bookings, edit their profile, and change their password — all entirely in the browser.
+SVD Travels allows users to:
+1. Register and sign in with client-side form validation.
+2. Browse a vehicle catalogue with filters (by name, type, location, min/max price in ₹) and sorting (price low-to-high, high-to-low, name).
+3. View full vehicle details, select rental days, and see a live estimated total in ₹.
+4. Complete a booking form with validation (dates, location, and payment option - Cash on Delivery or Card).
+5. View an instant booking confirmation receipt with a print option.
+6. Manage bookings on "My Bookings" with live search, status filter, and cancel functionality.
+7. View and update profile information and change passwords.
 
 ---
 
 ## 2. Technologies Used
 
-| Layer    | Technology                                          |
-|----------|-----------------------------------------------------|
-| Frontend | HTML5, CSS3, Bootstrap 5, JavaScript (ES5+), jQuery |
-| Data     | Local JSON file (`frontend/json/vehicles.json`)     |
-| Storage  | Browser `localStorage` (auth, bookings)             |
-| Deps     | None — no npm packages, no build step, no bundler   |
+| Layer | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, Bootstrap 5, JavaScript (ES5/ES6), jQuery |
+| Data | Local JSON file (`json/vehicles.json`) |
+| Storage | Browser `localStorage` (for accounts, session, and bookings) |
+| Dependencies | None — pure client-side, zero npm dependencies |
 
 ---
 
 ## 3. Technology Restrictions Followed
 
 The project is built strictly within the course R1 syllabus:
-
 - **Used only:** HTML, CSS, Bootstrap 5, JavaScript, jQuery, JSON.
-- **Not used:** Node.js, Express, MongoDB, Mongoose, Firebase, TypeScript, Next.js, Vite, Tailwind CSS, or any npm package.
-- **No `package.json` dependencies** — `package.json` is included for project metadata only.
+- **Not used:** Node.js server, Express, MongoDB, Mongoose, Firebase, TypeScript, Next.js, Vite, Tailwind CSS, or any backend packages.
+- **Purely client-side validation and storage.**
 
 ---
 
@@ -45,167 +51,115 @@ The project is built strictly within the course R1 syllabus:
 ```
 vehicle-booking-website/
 │
-├── frontend/
-│   ├── index.html              Splash screen (animated progress → login)
-│   ├── login.html              Sign in + remember-email
-│   ├── register.html           Create an account
-│   ├── home.html               Hero + featured vehicles + search
-│   ├── vehicles.html           Filterable / sortable catalogue
-│   ├── vehicle-details.html    One vehicle + days & total + Book Now
-│   ├── booking.html            Checkout (customer, rental, payment, terms)
-│   ├── confirmation.html       Booking summary + print
-│   ├── my-bookings.html        List / search / sort / cancel bookings
-│   ├── profile.html            View/edit profile + change password
-│   ├── css/
-│   │   └── style.css           All custom styling (Bootstrap-compatible)
-│   ├── js/
-│   │   ├── main.js             Splash + Home page logic
-│   │   ├── auth.js             Login, Register, Profile, Change Password
-│   │   ├── vehicles.js         Vehicles list + Vehicle Details
-│   │   └── booking.js          Booking form + Confirmation + My Bookings
-│   └── json/
-│       └── vehicles.json       Vehicle catalogue (8 vehicles)
+├── index.html              Colorful welcome splash page (direct "Get Started" button)
+├── login.html              Sign in form with validation
+├── register.html           Create an account form with validation
+├── home.html               Hero section + featured vehicles + quick search
+├── vehicles.html           Filterable and sortable catalogue (Min/Max Price in ₹)
+├── vehicle-details.html    Vehicle details + days counter + Book Now button
+├── booking.html            Checkout form (customer info, dates, payment method, live ₹ total)
+├── confirmation.html       Booking receipt with full summary and print button
+├── my-bookings.html        List, filter, search, and cancel bookings
+├── profile.html            View/edit user profile + change password
 │
-├── package.json                Project metadata (no dependencies)
-└── README.md
+├── css/
+│   └── style.css           Custom responsive styling and vibrant header gradients
+├── js/
+│   ├── auth.js             Beginner-friendly authentication, profile & password validation
+│   ├── main.js             Splash page & home featured vehicles loader
+│   ├── vehicles.js         Vehicles catalogue filtering, sorting, & vehicle details
+│   └── booking.js          Checkout validation, confirmation receipt, & my-bookings management
+├── json/
+│   └── vehicles.json       Vehicle catalogue data with realistic INR rates (₹1600 - ₹6500)
+├── images/
+│   └── vehicles/           Vehicle showcase images
+├── package.json            Project metadata
+└── README.md               Project documentation
 ```
 
 ---
 
-## 5. Features
+## 5. Beginner-Friendly JavaScript Architecture
 
-| # | Feature | Where |
-|---|---------|-------|
-| 1 | Splash screen (animated progress → auto navigate) | index.html / main.js |
-| 2 | Register (name, email, phone, password, confirm, terms) | register.html / auth.js |
-| 3 | Login (remember-email, show/hide password) | login.html / auth.js |
-| 4 | Home (hero + featured vehicles + search) | home.html / main.js |
-| 5 | Vehicle search / filter / sort (name, type, location, price) | vehicles.html / vehicles.js |
-| 6 | Vehicle details (specs, features, days & estimated total) | vehicle-details.html / vehicles.js |
-| 7 | Vehicle booking (dates, locations, payment, live total) | booking.html / booking.js |
-| 8 | Confirmation (full summary + print) | confirmation.html / booking.js |
-| 9 | My Bookings (search, status filter, sort, cancel) | my-bookings.html / booking.js |
-| 10 | Booking cancellation (client-side, status → Cancelled) | booking.js (localStorage) |
-| 11 | Profile (avatar initials, view mode, safe fields) | profile.html / auth.js |
-| 12 | Edit profile (name + phone; email is immutable) | profile.html / auth.js |
-| 13 | Change password (current + new + confirm) | profile.html / auth.js |
-| 14 | Logout (confirm, clear session, → login) | every page's navbar |
+All JavaScript code has been written at an accessible, beginner-friendly level:
+- Plain `if...else` statements and straightforward regular expressions for form input checks.
+- Clear error messages mapped directly to Bootstrap's `.is-invalid` and `.invalid-feedback` classes.
+- Direct `localStorage.getItem` and `localStorage.setItem` for persistence (no complex backend or crypto).
+- Fully commented functions for easy readability and viva explanations.
 
 ---
 
-## 6. How to Open the Project
+## 6. How to Run the Project
 
-No server is needed. Open any of the following approaches:
+No server installation or backend build step is required:
 
-**Option A — Live Server (VS Code, recommended)**
-1. Install the "Live Server" extension in VS Code.
-2. Right-click `frontend/index.html` → **Open with Live Server**.
+### Option A — VS Code Live Server (Recommended)
+1. Open the project folder in **Visual Studio Code**.
+2. Install the **Live Server** extension (by Ritwick Dey).
+3. Right-click `index.html` and select **"Open with Live Server"**.
 
-**Option B — Direct file open**
-Open `frontend/index.html` directly in any modern browser.
-
-> Note: Some browsers block `$.ajax()` for local `file://` URLs due to CORS policy.
-> If the vehicle catalogue does not load, use **Option A** (Live Server) instead.
+### Option B — Direct Browser Open
+Double-click `index.html` to open it in Google Chrome, Microsoft Edge, or Mozilla Firefox.
 
 ---
 
-## 7. R1 Validations Implemented
+## 7. Client-Side Form Validations
 
-Every form is validated entirely client-side. Invalid submissions are blocked.
+Every form includes strict client-side validation to prevent empty or invalid submissions:
 
-### Login
-- Email required + valid format
-- Password required + minimum 6 characters
-- Bootstrap `is-invalid` / `invalid-feedback` on every field
+- **Registration Form (`register.html`):**
+  - Full Name: Required (letters only, minimum 2 characters).
+  - Email: Required (valid email format `user@domain.ext`).
+  - Phone: Required (10 to 15 digits).
+  - Password: Required (minimum 6 characters).
+  - Confirm Password: Must match Password exactly.
+  - Terms Checkbox: Must be accepted.
+  - Duplicate Check: Prevents registering an email that already exists in `localStorage`.
 
-### Register
-- Full Name required, min 2 chars, letters only, no all-digit / all-symbol / all-repeat
-- Email required + valid format
-- Phone required + 10–15 digits
-- Password required + min 6 characters
-- Confirm password must match
-- Terms & Conditions checkbox required
-- Live (`is-valid` / `is-invalid`) re-validation on input and blur
+- **Login Form (`login.html`):**
+  - Email: Required and validated format.
+  - Password: Required (minimum 6 characters).
+  - Account Match: Checks credentials against registered accounts in `localStorage`.
+  - **Pre-configured Admin Credentials:**
+    - **Admin ID / Email:** `admin@svdtravels.com` (or `admin`)
+    - **Admin Password:** `admin123`
+    - Logging in with these credentials gives Administrator privileges (visible on the Profile page with an Administrator badge).
+  - **Quick Auto-Fill:** An "Auto-fill Admin Details" button is available on the login card for one-click testing.
 
-### Booking Form
-- Customer name, email, phone validated
-- Pick-up date required; **must not be in the past**
-- Return date required; must be after the pick-up date
-- Pick-up location required
-- Return location required
-- When **Card Payment** is selected:
-  - Card number required + 13–19 digits
-  - Expiry required + `MM/YY` format
-  - CVV required + 3–4 digits
-- Terms & Conditions checkbox required
+- **Booking Checkout Form (`booking.html`):**
+  - Pick-up Date: Required and cannot be in the past.
+  - Return Date: Required and must be after the pick-up date.
+  - Pick-up & Return Locations: Required.
+  - Payment Details (if Card selected):
+    - 16-digit Card Number required.
+    - Expiry date (`MM/YY`) required.
+    - 3-digit CVV required.
+  - Terms & Conditions: Checkbox must be ticked.
 
-### Search / Filter
-- Minimum price must be **≥ 0**
-- Maximum price must be **≥ 0**
-- Minimum price must not exceed maximum price
+- **Vehicle Search & Filter (`vehicles.html`):**
+  - Min Price (₹) & Max Price (₹): Valid numeric inputs; Min Price cannot exceed Max Price.
 
-### Profile — Edit Profile
-- Full Name required, min 2 chars, letters only
-- Phone required + 10–15 digits
-
-### Profile — Change Password
-- Current password required
-- New password required + min 6 characters
-- Confirm new password must match
+- **Profile & Password Change (`profile.html`):**
+  - Name and Phone validation on edit.
+  - Current password verification and new password matching checks.
 
 ---
 
-## 8. localStorage Keys Used
+## 8. Pricing in Indian Rupees (₹)
 
-| Key | Contents |
-|-----|----------|
-| `ww_accounts` | All registered user accounts (name, email, phone, hashed password) |
-| `ww_user` | Currently logged-in user's safe fields (name, email, phone) — never the password |
-| `ww_remember_email` | Remembered login email (if "Remember me" is checked) |
-| `ww_selected_vehicle` | ID of the vehicle chosen on the browse page |
-| `ww_booking` | Booking data passed from vehicle-details to the booking form |
-| `ww_latest_booking` | Most recently confirmed booking |
-| `ww_bookings` | All bookings for the logged-in user |
+All prices across the vehicle catalogue, daily rates, calculated totals, booking summaries, confirmation receipts, and filter controls are displayed in Indian Rupees:
+- Hatchbacks: ₹1,600 / day
+- Compact SUVs: ₹2,200 – ₹2,800 / day
+- Sedans: ₹3,500 – ₹4,500 / day
+- Luxury & Premium Vehicles: ₹5,500 – ₹6,500 / day
 
 ---
 
-## 9. Password Security
+## 9. Submission Checklist
 
-- Passwords are hashed with the **browser's built-in `crypto.subtle.digest` (SHA-256)** with a random per-user salt.
-- The stored value is `"salt:hex-hash"` — passwords are never stored as plaintext.
-- `ww_user` and API responses **never contain a password or hash** — only the public fields (name, email, phone) are stored in the session.
-
----
-
-## 10. How to Test R1 Validation
-
-1. Open `frontend/index.html` (use Live Server or equivalent).
-2. Follow the full user flow:
-   - Splash → Register → Login → Home → Vehicles → Vehicle Details → Booking → Confirmation → My Bookings → Cancel → Profile → Edit Profile → Change Password → Logout.
-3. Test invalid inputs on every form — submissions should be blocked and inline errors shown.
-4. Test valid inputs — forms should submit / navigate correctly.
-
-### Quick validation checks
-
-| Form | Invalid input to try | Expected result |
-|------|---------------------|-----------------|
-| Login | Empty email | "Email is required." shown |
-| Login | Bad password (< 6 chars) | "Password must be at least 6 characters." shown |
-| Register | Duplicate email | "An account with this email already exists." shown |
-| Booking | Pick-up date in past | "Pick-up date cannot be in the past." shown |
-| Booking | Card fields empty (Card Payment selected) | "Card number / Expiry / CVV is required." shown |
-| Filter | Min price = -50 | "Minimum price must be 0 or greater." shown |
-| Profile | Name = "" | "Full name is required." shown |
-| Change password | Wrong current password | "Current password is incorrect." shown |
-
----
-
-## 11. Course Submission Checklist
-
-- [x] All 10 frontend pages render and are responsive.
-- [x] Full user flow works end-to-end in the browser.
-- [x] All R1 client-side validations are implemented and tested.
-- [x] No backend, no database, no npm dependencies.
-- [x] No Express / MongoDB / Node.js / TypeScript / Firebase / JWT / Vite / Tailwind / bcrypt / any extra packages.
-- [x] Browser console is clean (no errors).
-- [x] README is complete and included.
+- [x] Pure frontend application with 10 responsive pages.
+- [x] Complete client-side form validation across all user inputs.
+- [x] Pricing standardized to Indian Rupees (₹).
+- [x] Beginner-level, readable, clean JavaScript code.
+- [x] No backend, Node server, or external database required.
+- [x] Clean browser console with zero errors.
