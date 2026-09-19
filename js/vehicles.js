@@ -243,9 +243,13 @@ $(document).ready(function () {
         }
 
         function updateTotal() {
-            var days = parseInt($('#daysInput').val(), 10) || 1;
+            var raw = $('#daysInput').val();
+            // If user cleared the input while typing, don't force an overwrite yet
+            if (raw === '' || isNaN(raw)) {
+                return;
+            }
+            var days = parseInt(raw, 10);
             if (days < 1) days = 1;
-            $('#daysInput').val(days);
 
             if (currentCar) {
                 var total = currentCar.pricePerDay * days;
@@ -253,7 +257,9 @@ $(document).ready(function () {
             }
         }
 
-        $('#btnDaysMinus').on('click', function () {
+        // Stepper minus button
+        $('#btnDaysMinus').on('click', function (e) {
+            e.preventDefault();
             var current = parseInt($('#daysInput').val(), 10) || 1;
             if (current > 1) {
                 $('#daysInput').val(current - 1);
@@ -261,13 +267,27 @@ $(document).ready(function () {
             }
         });
 
-        $('#btnDaysPlus').on('click', function () {
+        // Stepper plus button
+        $('#btnDaysPlus').on('click', function (e) {
+            e.preventDefault();
             var current = parseInt($('#daysInput').val(), 10) || 1;
             $('#daysInput').val(current + 1);
             updateTotal();
         });
 
+        // When user types in the input box
         $('#daysInput').on('input change', updateTotal);
+
+        // When user leaves the input box, ensure valid number >= 1
+        $('#daysInput').on('blur', function () {
+            var raw = $('#daysInput').val();
+            var days = parseInt(raw, 10);
+            if (isNaN(days) || days < 1) {
+                days = 1;
+            }
+            $('#daysInput').val(days);
+            updateTotal();
+        });
 
         // Click 'Book Now' -> save booking data and go to booking.html
         $('#btnBookNow').on('click', function () {

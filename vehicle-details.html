@@ -113,8 +113,12 @@
 
                             <div class="summary-row">
                                 <label class="mb-0" for="daysInput">Number of days</label>
-                                <input type="number" class="form-control days-input" id="daysInput"
-                                       min="1" step="1" value="1">
+                                <div class="d-flex align-items-center gap-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2" id="btnDaysMinus" title="Decrease days" style="line-height: 1; font-weight: bold; font-size: 1.1rem; width: 32px; height: 32px; padding: 0;">−</button>
+                                    <input type="number" class="form-control days-input text-center" id="daysInput"
+                                           min="1" max="90" step="1" value="1" style="width: 65px; height: 32px; padding: 0 .4rem;">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2" id="btnDaysPlus" title="Increase days" style="line-height: 1; font-weight: bold; font-size: 1.1rem; width: 32px; height: 32px; padding: 0;">+</button>
+                                </div>
                             </div>
                             <div class="invalid-feedback" id="daysError"></div>
 

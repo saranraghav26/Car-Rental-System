@@ -246,7 +246,11 @@
                             </div>
                             <div class="summary-row">
                                 <span>Rental days</span>
-                                <strong id="summaryDays">—</strong>
+                                <div class="d-flex align-items-center gap-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-0" id="btnSummaryDaysMinus" title="Decrease days" style="line-height: 1; font-weight: bold; width: 28px; height: 28px; padding: 0;">−</button>
+                                    <strong id="summaryDays" class="px-1 text-center" style="min-width: 45px;">—</strong>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-0" id="btnSummaryDaysPlus" title="Increase days" style="line-height: 1; font-weight: bold; width: 28px; height: 28px; padding: 0;">+</button>
+                                </div>
                             </div>
                             <div class="summary-row summary-total-row">
                                 <span>Estimated total</span>

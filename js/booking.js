@@ -94,7 +94,41 @@ $(document).ready(function () {
         }
         calculateTotal();
 
-        $('#pickupDate, #returnDate').on('change input', calculateTotal);
+        // Update when user changes date inputs
+        $('#pickupDate, #returnDate').on('change input', function () {
+            calculateTotal();
+        });
+
+        // Increase days button in booking summary
+        $('#btnSummaryDaysPlus').on('click', function (e) {
+            e.preventDefault();
+            var currentDays = calculateTotal();
+            var pickStr = $('#pickupDate').val();
+            if (!pickStr) {
+                pickStr = new Date().toISOString().split('T')[0];
+                $('#pickupDate').val(pickStr);
+            }
+            var d = new Date(pickStr);
+            d.setDate(d.getDate() + currentDays + 1);
+            $('#returnDate').val(d.toISOString().split('T')[0]);
+            calculateTotal();
+        });
+
+        // Decrease days button in booking summary
+        $('#btnSummaryDaysMinus').on('click', function (e) {
+            e.preventDefault();
+            var currentDays = calculateTotal();
+            if (currentDays <= 1) return;
+            var pickStr = $('#pickupDate').val();
+            if (!pickStr) {
+                pickStr = new Date().toISOString().split('T')[0];
+                $('#pickupDate').val(pickStr);
+            }
+            var d = new Date(pickStr);
+            d.setDate(d.getDate() + currentDays - 1);
+            $('#returnDate').val(d.toISOString().split('T')[0]);
+            calculateTotal();
+        });
 
         // Payment method toggle (Cash vs Card)
         $('input[name="payment"]').on('change', function () {
@@ -171,7 +205,7 @@ $(document).ready(function () {
             // Create new booking record
             var randomNum = Math.floor(Math.random() * 900000 + 100000);
             var newBooking = {
-                bookingId: 'WW-' + randomNum,
+                bookingId: 'SVD-' + randomNum,
                 vehicleId: selectedCar.vehicleId,
                 vehicleName: selectedCar.name,
                 vehicleType: selectedCar.type,
@@ -225,7 +259,7 @@ $(document).ready(function () {
             var car = (fallbackCars && fallbackCars.length) ? fallbackCars[0] : null;
             if (car) {
                 latest = {
-                    bookingId: 'WW-548192',
+                    bookingId: 'SVD-548192',
                     vehicleId: car.vehicleId,
                     vehicleName: car.name,
                     vehicleType: car.type,
