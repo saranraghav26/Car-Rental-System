@@ -1,10 +1,10 @@
-# SVD Travels — Online Vehicle Booking Website
+# Audi Car Rental — Online Vehicle Booking Website
 
 **Course Project: Frontend & Client-Side Form Validation Only (Indian Rupees - ₹)**
 
 A fully client-side vehicle booking web application built as an R1 course project.
 
-- **Frontend:** 10 clean, responsive HTML pages (Welcome Splash → Login/Register → Home → Vehicles Catalogue → Vehicle Details → Booking & Checkout → Confirmation Receipt → My Bookings → User Profile).
+- **Frontend:** Clean, responsive HTML pages (Login/Register → Home → Vehicles Catalogue → Vehicle Details → Booking & Checkout → Confirmation Receipt → My Bookings → User Profile).
 - **Data:** Vehicle catalogue loaded from a local JSON file (`json/vehicles.json`) priced in **Indian Rupees (₹)**.
 - **Auth & Storage:** All user accounts, sessions, and bookings are handled entirely in the browser via `localStorage`.
 - **Validation:** Clear, beginner-friendly client-side form validation on every form — login, registration, vehicle booking, profile update, and search/filters.
@@ -15,7 +15,7 @@ A fully client-side vehicle booking web application built as an R1 course projec
 
 ## 1. Project Purpose
 
-SVD Travels allows users to:
+Audi Car Rental allows users to:
 1. Register and sign in with client-side form validation.
 2. Browse a vehicle catalogue with filters (by name, type, location, min/max price in ₹) and sorting (price low-to-high, high-to-low, name).
 3. View full vehicle details, select rental days, and see a live estimated total in ₹.
@@ -51,8 +51,8 @@ The project is built strictly within the course R1 syllabus:
 ```
 vehicle-booking-website/
 │
-├── index.html              Colorful welcome splash page (direct "Get Started" button)
-├── login.html              Sign in form with validation
+├── index.html              Direct entry login page with form validation
+├── login.html              Sign in form with validation (alias to index)
 ├── register.html           Create an account form with validation
 ├── home.html               Hero section + featured vehicles + quick search
 ├── vehicles.html           Filterable and sortable catalogue (Min/Max Price in ₹)
@@ -121,7 +121,7 @@ Every form includes strict client-side validation to prevent empty or invalid su
   - Password: Required (minimum 6 characters).
   - Account Match: Checks credentials against registered accounts in `localStorage`.
   - **Pre-configured Admin Credentials:**
-    - **Admin ID / Email:** `admin@svdtravels.com` (or `admin`)
+    - **Admin ID / Email:** `admin@audicarrental.com` (or `admin`)
     - **Admin Password:** `admin123`
     - Logging in with these credentials gives Administrator privileges (visible on the Profile page with an Administrator badge).
   - **Quick Auto-Fill:** An "Auto-fill Admin Details" button is available on the login card for one-click testing.

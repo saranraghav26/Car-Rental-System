@@ -239,6 +239,27 @@ $(document).ready(function () {
             $('#specFuel').text(car.fuelType || car.fuel || 'Petrol');
             $('#specYear').text(car.year || '2024');
 
+            // Handle Availability state: disable booking if car is unavailable
+            if (car.availability === false) {
+                $('#btnBookNow')
+                    .prop('disabled', true)
+                    .addClass('btn-secondary disabled')
+                    .removeClass('btn-login')
+                    .text('Currently Unavailable');
+                $('#unavailableAlert').removeClass('d-none');
+                $('#detailNote').addClass('d-none');
+                $('#daysInput, #btnDaysMinus, #btnDaysPlus').prop('disabled', true);
+            } else {
+                $('#btnBookNow')
+                    .prop('disabled', false)
+                    .removeClass('btn-secondary disabled')
+                    .addClass('btn-login')
+                    .text('Book Now');
+                $('#unavailableAlert').addClass('d-none');
+                $('#detailNote').removeClass('d-none');
+                $('#daysInput, #btnDaysMinus, #btnDaysPlus').prop('disabled', false);
+            }
+
             updateTotal();
         }
 
@@ -293,6 +314,12 @@ $(document).ready(function () {
         $('#btnBookNow').on('click', function () {
             if (!currentCar) return;
 
+            // Strict check: Cannot book unavailable vehicle
+            if (currentCar.availability === false) {
+                alert('Sorry, this vehicle is currently unavailable and cannot be booked.');
+                return;
+            }
+
             var days = parseInt($('#daysInput').val(), 10) || 1;
             var bookingInfo = {
                 vehicleId: currentCar.vehicleId,
@@ -302,7 +329,8 @@ $(document).ready(function () {
                 location: currentCar.location,
                 seats: currentCar.seats,
                 pricePerDay: currentCar.pricePerDay,
-                days: days
+                days: days,
+                availability: currentCar.availability
             };
 
             localStorage.setItem('ww_booking', JSON.stringify(bookingInfo));

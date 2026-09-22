@@ -38,6 +38,15 @@ $(document).ready(function () {
             }
         }
 
+        // Strict Check: Cannot book an unavailable vehicle
+        if (selectedCar && selectedCar.availability === false) {
+            $('#bookingContent').addClass('d-none');
+            $('#bookingError').removeClass('d-none');
+            $('#bookingErrorTitle').text('Vehicle Unavailable');
+            $('#bookingErrorMessage').text('Sorry, ' + (selectedCar.name || 'this vehicle') + ' is currently unavailable and cannot be booked. Please choose an available vehicle.');
+            return;
+        }
+
         // Check if user is logged in (use active user or guest session for easy testing)
         if (!currentUser || !currentUser.email) {
             currentUser = {
@@ -138,6 +147,23 @@ $(document).ready(function () {
             $(this).closest('.payment-option').addClass('selected');
         });
 
+        // Real-time clearing for booking inputs
+        $('#cusName, #cusPhone, #pickupDate, #returnDate, #pickupLocation, #returnLocation, #cardNumber, #cardExpiry, #cardCvv').on('input change', function () {
+            $(this).removeClass('is-invalid');
+            $(this).closest('div').removeClass('has-error');
+            $(this).siblings('.invalid-feedback').hide();
+            $('#bookingFormAlert').addClass('d-none');
+        });
+
+        $('#termsCheck').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#termsGroup').removeClass('has-error');
+                $('#termsCheck').removeClass('is-invalid');
+                $('#termsError').hide();
+                $('#bookingFormAlert').addClass('d-none');
+            }
+        });
+
         // Submit Booking Form
         function submitBooking() {
             var name = $('#cusName').val().trim();
@@ -149,53 +175,139 @@ $(document).ready(function () {
             var returnLocation = $('#returnLocation').val().trim() || selectedCar.location || 'Downtown';
             var payment = $('input[name="payment"]:checked').val() || 'cash';
             var termsAgreed = $('#termsCheck').is(':checked');
+            var isValid = true;
 
-            // Basic validation
+            // Reset previous error states
+            $('.has-error').removeClass('has-error');
+            $('.is-invalid').removeClass('is-invalid');
+            $('.invalid-feedback').hide().text('');
+            $('#bookingFormAlert').addClass('d-none').text('');
+
+            // 0. Vehicle Availability validation
+            if (selectedCar && selectedCar.availability === false) {
+                $('#bookingFormAlert').removeClass('d-none').text('Sorry, this vehicle is currently unavailable and cannot be booked.');
+                return;
+            }
+
+            // 1. Name validation
             if (name === '') {
-                alert('Please enter your full name.');
-                $('#cusName').focus();
-                return;
-            }
-            if (email === '') {
-                alert('Please enter your email.');
-                $('#cusEmail').focus();
-                return;
-            }
-            if (phone === '') {
-                alert('Please enter your phone number.');
-                $('#cusPhone').focus();
-                return;
-            }
-            if (!pickupDate) {
-                alert('Please select a pick-up date.');
-                $('#pickupDate').focus();
-                return;
-            }
-            if (!returnDate) {
-                alert('Please select a return date.');
-                $('#returnDate').focus();
-                return;
-            }
-            if (new Date(returnDate) < new Date(pickupDate)) {
-                alert('Return date cannot be earlier than pick-up date.');
-                $('#returnDate').focus();
-                return;
+                $('#nameGroup').addClass('has-error');
+                $('#cusName').addClass('is-invalid');
+                $('#nameError').text('Please enter your full name.').show();
+                isValid = false;
+            } else if (name.length < 2) {
+                $('#nameGroup').addClass('has-error');
+                $('#cusName').addClass('is-invalid');
+                $('#nameError').text('Full name must be at least 2 characters.').show();
+                isValid = false;
             }
 
-            // Card payment check
+            // 2. Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === '') {
+                $('#emailGroup').addClass('has-error');
+                $('#cusEmail').addClass('is-invalid');
+                $('#emailError').text('Please enter your email.').show();
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                $('#emailGroup').addClass('has-error');
+                $('#cusEmail').addClass('is-invalid');
+                $('#emailError').text('Please enter a valid email address.').show();
+                isValid = false;
+            }
+
+            // 3. Phone validation (10 digits)
+            var cleanPhone = phone.replace(/[^0-9]/g, '');
+            if (phone === '') {
+                $('#phoneGroup').addClass('has-error');
+                $('#cusPhone').addClass('is-invalid');
+                $('#phoneError').text('Please enter your phone number.').show();
+                isValid = false;
+            } else if (cleanPhone.length !== 10) {
+                $('#phoneGroup').addClass('has-error');
+                $('#cusPhone').addClass('is-invalid');
+                $('#phoneError').text('Please enter a valid 10-digit mobile number.').show();
+                isValid = false;
+            }
+
+            // 4. Pickup Date validation
+            var todayStr = new Date().toISOString().split('T')[0];
+            if (!pickupDate) {
+                $('#pickupGroup').addClass('has-error');
+                $('#pickupDate').addClass('is-invalid');
+                $('#pickupError').text('Please select a pick-up date.').show();
+                isValid = false;
+            } else if (pickupDate < todayStr) {
+                $('#pickupGroup').addClass('has-error');
+                $('#pickupDate').addClass('is-invalid');
+                $('#pickupError').text('Pick-up date cannot be in the past.').show();
+                isValid = false;
+            }
+
+            // 5. Return Date validation
+            if (!returnDate) {
+                $('#returnGroup').addClass('has-error');
+                $('#returnDate').addClass('is-invalid');
+                $('#returnError').text('Please select a return date.').show();
+                isValid = false;
+            } else if (pickupDate && returnDate < pickupDate) {
+                $('#returnGroup').addClass('has-error');
+                $('#returnDate').addClass('is-invalid');
+                $('#returnError').text('Return date cannot be earlier than pick-up date.').show();
+                isValid = false;
+            }
+
+            // 6. Pickup & Return Locations
+            if (!pickupLocation) {
+                $('#pickupLocGroup').addClass('has-error');
+                $('#pickupLocation').addClass('is-invalid');
+                $('#pickupLocError').text('Please specify a pick-up location.').show();
+                isValid = false;
+            }
+            if (!returnLocation) {
+                $('#returnLocGroup').addClass('has-error');
+                $('#returnLocation').addClass('is-invalid');
+                $('#returnLocError').text('Please specify a return location.').show();
+                isValid = false;
+            }
+
+            // 7. Card payment validation (if card chosen)
             if (payment === 'card') {
-                var cardNum = $('#cardNumber').val().trim();
+                var cardNum = $('#cardNumber').val().replace(/\s+/g, '');
                 var cardExp = $('#cardExpiry').val().trim();
                 var cardCvv = $('#cardCvv').val().trim();
-                if (cardNum === '' || cardExp === '' || cardCvv === '') {
-                    alert('Please enter your card number, expiry date, and CVV.');
-                    return;
+
+                if (cardNum === '' || cardNum.length < 16) {
+                    $('#cardNumGroup').addClass('has-error');
+                    $('#cardNumber').addClass('is-invalid');
+                    $('#cardNumError').text('Please enter a valid 16-digit card number.').show();
+                    isValid = false;
+                }
+                if (cardExp === '' || !/^\d{2}\/\d{2}$/.test(cardExp)) {
+                    $('#cardExpGroup').addClass('has-error');
+                    $('#cardExpiry').addClass('is-invalid');
+                    $('#cardExpError').text('Enter expiry in MM/YY format.').show();
+                    isValid = false;
+                }
+                if (cardCvv === '' || cardCvv.length < 3) {
+                    $('#cardCvvGroup').addClass('has-error');
+                    $('#cardCvv').addClass('is-invalid');
+                    $('#cardCvvError').text('Enter 3-digit CVV.').show();
+                    isValid = false;
                 }
             }
 
+            // 8. Terms Checkbox
             if (!termsAgreed) {
-                alert('Please accept the Terms & Conditions.');
-                $('#termsCheck').focus();
+                $('#termsGroup').addClass('has-error');
+                $('#termsCheck').addClass('is-invalid');
+                $('#termsError').text('Please accept the Terms & Conditions to proceed.').show();
+                isValid = false;
+            }
+
+            // If any validation failed, show form-level alert and stop
+            if (!isValid) {
+                $('#bookingFormAlert').removeClass('d-none').text('Please correct the highlighted fields before confirming.');
                 return;
             }
 
@@ -205,14 +317,14 @@ $(document).ready(function () {
             // Create new booking record
             var randomNum = Math.floor(Math.random() * 900000 + 100000);
             var newBooking = {
-                bookingId: 'SVD-' + randomNum,
+                bookingId: 'ACR-' + randomNum,
                 vehicleId: selectedCar.vehicleId,
                 vehicleName: selectedCar.name,
                 vehicleType: selectedCar.type,
                 vehicleImage: selectedCar.image || 'images/vehicles/camry.jpg',
                 customerName: name,
                 customerEmail: email,
-                customerPhone: phone,
+                customerPhone: cleanPhone,
                 pickupDate: pickupDate,
                 returnDate: returnDate,
                 pickupLocation: pickupLocation,
@@ -259,7 +371,7 @@ $(document).ready(function () {
             var car = (fallbackCars && fallbackCars.length) ? fallbackCars[0] : null;
             if (car) {
                 latest = {
-                    bookingId: 'SVD-548192',
+                    bookingId: 'ACR-548192',
                     vehicleId: car.vehicleId,
                     vehicleName: car.name,
                     vehicleType: car.type,
